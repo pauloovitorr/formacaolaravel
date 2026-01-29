@@ -67,8 +67,10 @@ class SeriesController extends Controller
             //         'status' => 'success'
             //     ], 200);
 
-            return redirect()->route('series.index')
-            ->with('success', 'Série cadastrada com sucesso');;
+            return redirect()
+                ->route('series.index')
+                ->with('success', "Série {$serie->titulo} cadastrada com sucesso");
+            ;
 
         } else {
             //   return   response([
@@ -95,12 +97,52 @@ class SeriesController extends Controller
     // 2° Pegar diretamente o ID da url
     public function destroy($serie)
     {
+
+        $nome_serie = Serie::find($serie);
+
         $serie = Serie::destroy($serie);
         if ($serie) {
             return redirect()
-            ->route('series.index')
-            ->with('success', 'Série excluída com sucesso');
-        } 
+                ->route('series.index')
+                ->with('success', "Série {$nome_serie->titulo} excluída com sucesso");
+        }
+    }
+
+    public function edit($serie)
+    {
+
+        $serie = Serie::find($serie);
+
+        if (!$serie) {
+            return redirect()
+                ->route('series.index')
+                ->with('error', 'Série não encontrada');
+
+        }
+
+        return view('series.edit')->with('serie', $serie);
+    }
+
+    public function update(Request $request, $serie)
+    {
+
+        $serie = Serie::find($serie);
+
+        if (!$serie) {
+            return redirect()
+                ->route('series.index')
+                ->with('error', 'Série não encontrada');
+        }
+
+        if ($serie->update($request->all())) {
+            return redirect()
+                ->route('series.index')
+                ->with('success', 'Série atualizada');
+        }
+
+
+
+
     }
 
 

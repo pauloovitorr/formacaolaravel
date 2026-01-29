@@ -10,6 +10,10 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
 
     <div class="mb-3">
         <h1>Séries Cadastradas</h1>
@@ -22,6 +26,7 @@
                 <th>Título</th>
                 <th>Temporadas</th>
                 <th>Deletar</th>
+
             </tr>
         </thead>
         <tbody>
@@ -32,14 +37,22 @@
                     <td>{{ $serie->temporadas }}</td>
 
                     <td>
-                        <form action="{{ route('series.destroy', $serie->id) }}" method="post">
-                            @csrf
-                            @method('DELETE')
+                        <div class="d-flex" style="gap: 16px">
 
-                            <button type="submit" class="btn btn-danger">X</button>
+                            <a href="{{ route('series.edit', $serie->id) }}" class="btn btn-primary">Editar</a>
 
-                        </form>
+                            <form action="{{ route('series.destroy', $serie->id) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-danger">X</button>
+
+                            </form>
+
+
+                        </div>
                     </td>
+
 
                 </tr>
             @endforeach

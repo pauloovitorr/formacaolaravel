@@ -18,5 +18,7 @@ Route::prefix('series')
         Route::get('/create', 'create')->name('series.create');
         Route::post('/', 'store')->name('series.store');
         Route::delete('/destroy/{serie}', 'destroy')->name('series.destroy');
+        Route::get('/{serie}/edit', 'edit')->name('series.edit');
+        Route::put('/{serie}', 'update')->name('series.update');
 
     });
