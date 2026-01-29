@@ -34,7 +34,7 @@
                         <label for="temporadas" class="form-label">Temporadas</label>
                         <input
                             type="number"
-                            name="temporada"
+                            name="temporadas"
                             id="temporadas"
                             class="form-control"
                             min="1"

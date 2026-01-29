@@ -39,25 +39,36 @@ class SeriesController extends Controller
 
     public function store(Request $request)
     {
-        $tituloSerie = $request->input('titulo');
-        $temporadaSerie = (int) $request->input('temporada');
+        // $tituloSerie = $request->input('titulo');
+        // $temporadaSerie = (int) $request->input('temporadas');
 
         // Forma de fazer com SQL puro sem model
         // $retorno = DB::insert('insert into series (titulo, temporadas) values (?, ?)', [$tituloSerie, $temporadaSerie]);
 
         // Com model
-        $serie = new Serie();
-        $serie->titulo = $tituloSerie;
-        $serie->temporadas = $temporadaSerie;
-        
+        // $serie = new Serie();
+        // $serie->titulo = $tituloSerie;
+        // $serie->temporadas = $temporadaSerie;
+        // $serie->save();
+
+        // mass assignment
+        // $serie = Serie::create([
+        //     'titulo' => $request->titulo,
+        //     'temporadas' => $request->temporadas
+        // ]);
 
 
-        if ($serie->save()) {
+        // mass assignment 2
+        $serie = Serie::create($request->all());
+
+
+        if ($serie) {
             //   return  response([
             //         'status' => 'success'
             //     ], 200);
 
-            return redirect()->route('series.index');
+            return redirect()->route('series.index')
+            ->with('success', 'Série cadastrada com sucesso');;
 
         } else {
             //   return   response([
@@ -74,4 +85,23 @@ class SeriesController extends Controller
         }
 
     }
+
+    // Duas formas de excluir um registro
+    // 1° Pegar o valor pelo $request->route
+    // public function destroy(Request $request){
+    //     dd($request->route('serie'));
+    // }
+
+    // 2° Pegar diretamente o ID da url
+    public function destroy($serie)
+    {
+        $serie = Serie::destroy($serie);
+        if ($serie) {
+            return redirect()
+            ->route('series.index')
+            ->with('success', 'Série excluída com sucesso');
+        } 
+    }
+
+
 }
