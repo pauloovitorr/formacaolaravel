@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SeriesFormRequest;
+use App\Models\Episode;
+use App\Models\Season;
 use App\Models\Serie;
+use App\Models\Series;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -25,7 +29,7 @@ class SeriesController extends Controller
 
 
         // Com model
-        $series = Serie::all();
+        $series = Series::all();
 
 
         // return view('series.index', compact('series'));
@@ -37,8 +41,9 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function store(Request $request)
+    public function store(SeriesFormRequest $request)
     {
+
         // $tituloSerie = $request->input('titulo');
         // $temporadaSerie = (int) $request->input('temporadas');
 
@@ -57,15 +62,47 @@ class SeriesController extends Controller
         //     'temporadas' => $request->temporadas
         // ]);
 
+        // 1° Validação de dados
+        // $request->validate([
+        //     'titulo' => ['required', 'min:3', 'max:50'],
+        //     'temporadas' => ['required', 'integer']
+        // ]);
+
+        // 2° Validação de dados -> Criei a minha própria Request
+
 
         // mass assignment 2
-        $serie = Serie::create($request->all());
-
-
+        $serie = Series::create($request->all());
         if ($serie) {
             //   return  response([
             //         'status' => 'success'
             //     ], 200);
+
+
+            $seasons = [];
+            for ($i = 1; $i <= $request->seasonsQty; $i++) {
+                $seasons[] = [
+                    'series_id' => $serie->id,
+                    'number' => $i
+                ];
+            }
+
+            Season::insert($seasons);
+
+            $episodes = [];
+
+            foreach ($serie->seasons as $season) {
+                for ($j = 1; $j <= $request->episodesPerSeason; $j++) {
+                    $episodes[] = [
+                        'season_id' => $season->id,
+                        'number' => $j
+                    ];
+                }
+            }
+
+            Episode::insert($episodes);
+
+
 
             return redirect()
                 ->route('series.index')
@@ -98,9 +135,9 @@ class SeriesController extends Controller
     public function destroy($serie)
     {
 
-        $nome_serie = Serie::find($serie);
+        $nome_serie = Series::find($serie);
 
-        $serie = Serie::destroy($serie);
+        $serie = Series::destroy($serie);
         if ($serie) {
             return redirect()
                 ->route('series.index')
@@ -111,7 +148,7 @@ class SeriesController extends Controller
     public function edit($serie)
     {
 
-        $serie = Serie::find($serie);
+        $serie = Series::find($serie);
 
         if (!$serie) {
             return redirect()
@@ -123,10 +160,10 @@ class SeriesController extends Controller
         return view('series.edit')->with('serie', $serie);
     }
 
-    public function update(Request $request, $serie)
+    public function update(SeriesFormRequest $request, $serie)
     {
 
-        $serie = Serie::find($serie);
+        $serie = Series::find($serie);
 
         if (!$serie) {
             return redirect()

@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\SeriesController;
+use Illuminate\Support\Facades\Route;
+
 
 // Rotas sem agrupamento
 
@@ -20,5 +22,14 @@ Route::prefix('series')
         Route::delete('/destroy/{serie}', 'destroy')->name('series.destroy');
         Route::get('/{serie}/edit', 'edit')->name('series.edit');
         Route::put('/{serie}', 'update')->name('series.update');
+    });
+
+
+
+Route::prefix('series')
+    ->controller(SeasonsController::class)
+    ->group(function () {
+
+        Route::get('/{series}/seasons', 'index')->name('seasons.index');
 
     });

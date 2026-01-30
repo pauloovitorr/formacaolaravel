@@ -19,43 +19,41 @@
         <h1>Séries Cadastradas</h1>
     </div>
 
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
+  <table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($series as $serie)
             <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Temporadas</th>
-                <th>Deletar</th>
+                <td>{{ $serie->id }}</td>
+                <td> <a href="{{ route('seasons.index', $serie->id ) }}" >{{ $serie->titulo }}</a> </td>
+                <td>
+                    <div class="d-flex" style="gap: 16px">
+                        <a href="{{ route('series.edit', $serie->id) }}" class="btn btn-primary">Editar</a>
 
+                        <form action="{{ route('series.destroy', $serie->id) }}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">X</button>
+                        </form>
+                    </div>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($series as $serie)
-                <tr>
-                    <td>{{ $serie->id }}</td>
-                    <td>{{ $serie->titulo }}</td>
-                    <td>{{ $serie->temporadas }}</td>
-
-                    <td>
-                        <div class="d-flex" style="gap: 16px">
-
-                            <a href="{{ route('series.edit', $serie->id) }}" class="btn btn-primary">Editar</a>
-
-                            <form action="{{ route('series.destroy', $serie->id) }}" method="post">
-                                @csrf
-                                @method('DELETE')
-
-                                <button type="submit" class="btn btn-danger">X</button>
-
-                            </form>
+        @empty
+            <tr>
+                <td colspan="3" class="text-center text-muted">
+                    Nenhuma série cadastrada
+                </td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
 
 
-                        </div>
-                    </td>
 
-
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
 @endsection

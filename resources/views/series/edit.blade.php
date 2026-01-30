@@ -32,20 +32,6 @@
                         >
                     </div>
 
-                    <div class="mb-3">
-                        <label for="temporadas" class="form-label">Temporadas</label>
-                        <input
-                            type="number"
-                            name="temporadas"
-                            id="temporadas"
-                            class="form-control"
-                            min="1"
-                            placeholder="Quantidade de temporadas"
-                            value="{{ $serie->temporadas }}" 
-                            required
-                        >
-                    </div>
-
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">
                             Atualizar
