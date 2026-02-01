@@ -22,7 +22,7 @@
         @forelse ($seasons as $season)
             <tr>
                 <td>{{ $season->id }}</td>
-                <td>{{ $season->number }}</td>
+                <td> <a href="{{ route('episodes.index', $season->id) }}">{{ $season->number }}</a> </td>
                 <td>{{ $season->episodes->count() }}</td>
                
             </tr>

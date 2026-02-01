@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Episode;
-use App\Models\Season;
-use App\Models\Serie;
 use App\Models\Series;
-use Illuminate\Support\Facades\DB;
+// use App\Repositories\EloquentSeriesRepository;
+use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
+
+    public function __construct(private SeriesRepository $repository)
+{
+    
+}
+
     public function index(Request $request)
     {
 
@@ -71,57 +75,34 @@ class SeriesController extends Controller
         // 2° Validação de dados -> Criei a minha própria Request
 
 
-        // mass assignment 2
-        $serie = Series::create($request->all());
-        if ($serie) {
-            //   return  response([
-            //         'status' => 'success'
-            //     ], 200);
+        // Adicionei a lógica de criação de séries na camada de Repositories
+
+        $serieCriada = $this->repository->add($request);
+
+        return redirect()
+            ->route('series.index')
+            ->with('success', "Série {$serieCriada->titulo} cadastrada com sucesso");
+        ;
+
+        // } 
+
+        // else {
+        //     //   return   response([
+        //     //         'status' => 'error'
+        //     //     ],400 );
 
 
-            $seasons = [];
-            for ($i = 1; $i <= $request->seasonsQty; $i++) {
-                $seasons[] = [
-                    'series_id' => $serie->id,
-                    'number' => $i
-                ];
-            }
+        //     return redirect()
+        //         ->route('series.create')
+        //         ->withErrors(['erro' => 'Erro ao criar a série'])
+        //         ->withInput();
 
-            Season::insert($seasons);
 
-            $episodes = [];
-
-            foreach ($serie->seasons as $season) {
-                for ($j = 1; $j <= $request->episodesPerSeason; $j++) {
-                    $episodes[] = [
-                        'season_id' => $season->id,
-                        'number' => $j
-                    ];
-                }
-            }
-
-            Episode::insert($episodes);
+        // }
 
 
 
-            return redirect()
-                ->route('series.index')
-                ->with('success', "Série {$serie->titulo} cadastrada com sucesso");
-            ;
 
-        } else {
-            //   return   response([
-            //         'status' => 'error'
-            //     ],400 );
-
-
-            return redirect()
-                ->route('series.create')
-                ->withErrors(['erro' => 'Erro ao criar a série'])
-                ->withInput();
-
-
-        }
 
     }
 

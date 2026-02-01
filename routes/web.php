@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\SeriesController;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,12 @@ Route::prefix('series')
         Route::get('/{series}/seasons', 'index')->name('seasons.index');
 
     });
+
+
+Route::controller(EpisodesController::class)
+    ->group(function () {
+
+    Route::get('/seasons/{seasons}/episodes', 'index')->name('episodes.index');
+    Route::post('/seasons/episodes', 'store')->name('episodes.store');
+
+});
