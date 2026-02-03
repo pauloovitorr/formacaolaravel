@@ -10,8 +10,13 @@
     <h1>Episódios</h1>
 </div>
 
-<form method="POST" action="{{ route('episodes.store') }}">
+<form method="POST" action="{{ route('episodes.update', $seasons ) }}">
     @csrf
+    @method('put')
+
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
     
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
@@ -31,6 +36,9 @@
                             type="checkbox"
                             name="episodes[]"
                             value="{{ $episode->id }}"
+                            @if ($episode->watched)
+                                checked
+                            @endif
                         >
                     </td>
                 </tr>

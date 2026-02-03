@@ -40,6 +40,6 @@ Route::controller(EpisodesController::class)
     ->group(function () {
 
     Route::get('/seasons/{seasons}/episodes', 'index')->name('episodes.index');
-    Route::post('/seasons/episodes', 'store')->name('episodes.store');
+    Route::put('/seasons/{seasons}/episodes', 'update')->name('episodes.update');
 
 });

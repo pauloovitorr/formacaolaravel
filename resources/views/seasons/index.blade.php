@@ -16,6 +16,7 @@
             <th>ID</th>
             <th>Temporada {{ $series->titulo }}</th>
             <th>Episódios</th>
+            <th>Assistidos</th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,7 @@
                 <td>{{ $season->id }}</td>
                 <td> <a href="{{ route('episodes.index', $season->id) }}">{{ $season->number }}</a> </td>
                 <td>{{ $season->episodes->count() }}</td>
+                <td>{{ $season->numberOfWatchedEpisodes() }}</td>
                
             </tr>
         @empty
