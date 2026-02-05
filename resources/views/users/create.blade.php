@@ -10,12 +10,18 @@
 
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Login</h5>
+                    <h5 class="mb-0">Cadastro de Usuário </h5>
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('login.store') }}" method="POST">
+                    <form action="{{ route('users.store') }}" method="POST">
                         @csrf
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nome</label>
+                            <input type="text" name="name" id="name" class="form-control"
+                                placeholder="Digite seu nome" value="{{ old('name') }}" required>
+                        </div>
 
                         <div class="mb-3">
                             <label for="email" class="form-label">E-mail</label>
@@ -31,13 +37,10 @@
 
                         
 
-                        <div class="d-flex" style="gap: 16px">
+                        <div class="d-grid">
                             <button type="submit" class="btn btn-primary">
-                                Entrar
-                            </button>
-                            <a href="{{ route('users.create') }}" class="btn btn-secondary">
                                 Cadastrar
-                            </a>
+                            </button>
                         </div>
                     </form>
                 </div>

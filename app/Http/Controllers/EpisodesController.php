@@ -13,8 +13,8 @@ class EpisodesController extends Controller
     {
 
         return view('episodes.index')
-        ->with('episodes', $seasons->episodes)
-        ->with('seasons', $seasons->id);
+            ->with('episodes', $seasons->episodes)
+            ->with('seasons', $seasons->id);
     }
 
 
@@ -23,9 +23,16 @@ class EpisodesController extends Controller
 
         $watchedEpisodes = $request->episodes;
 
-        $seasons->episodes()
-            ->whereIn('id', $watchedEpisodes)
-            ->update(['watched' => true]);
+        // dd($watchedEpisodes);
+
+        if ($watchedEpisodes) {
+            $seasons->episodes()
+                ->whereIn('id', $watchedEpisodes)
+                ->update(['watched' => true]);
+        }
+        else{
+            $seasons->episodes()->update(['watched' => false]);
+        }
 
         return redirect()
             ->route('episodes.index', $seasons->id)

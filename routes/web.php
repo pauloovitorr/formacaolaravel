@@ -4,6 +4,7 @@ use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\SeriesController;
+use App\Http\Controllers\UsersController;
 use App\Http\Middleware\Autenticador;
 use Illuminate\Support\Facades\Route;
 
@@ -53,4 +54,14 @@ Route::controller(LoginController::class)
     ->group(function () {
         Route::get('/login', 'index')->name('login');
         Route::post('/login', 'store')->name('login.store');
+        Route::get('/logout', 'destroy')->name('login.destroy');
+    });
+
+
+
+Route::controller(UsersController::class)
+    ->group(function () {
+        Route::get('/register', 'create')->name('users.create');
+        Route::post('/register', 'store')->name('users.store');
+        
     });
