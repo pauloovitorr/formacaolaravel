@@ -22,9 +22,18 @@
 
             <div class="collapse navbar-collapse justify-content-end">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ route('login.destroy') }}">Sair</a>
-                    </li>
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ route('login.destroy') }}">Sair</a>
+                        </li>
+                    @endauth
+
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ route('login') }}">Entrar</a>
+                        </li>
+                    @endguest
+
                 </ul>
             </div>
         </div>

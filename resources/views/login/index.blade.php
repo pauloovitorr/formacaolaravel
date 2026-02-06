@@ -1,9 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <a href="{{ route('series.index') }}" class="btn btn-secondary mb-3">
-        ← Voltar para listagem
-    </a>
+    
 
     <div class="row justify-content-center">
         <div class="col-md-6">

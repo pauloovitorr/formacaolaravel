@@ -16,13 +16,13 @@ use Illuminate\Support\Facades\Route;
 // Route::post('/series', [SeriesController::class, 'store'])->name('series.store');
 
 // Agrupando por prefixo e controller
+
+Route::get('/series', [SeriesController::class,'index'])->name('series.index');
+
 Route::prefix('series')
     ->controller(SeriesController::class)
+    ->middleware(Autenticador::class)
     ->group(function () {
-
-        Route::get('/', 'index')->name('series.index')
-            ->middleware(Autenticador::class);
-
         Route::get('/create', 'create')->name('series.create');
         Route::post('/', 'store')->name('series.store');
         Route::delete('/destroy/{serie}', 'destroy')->name('series.destroy');
@@ -34,6 +34,7 @@ Route::prefix('series')
 
 Route::prefix('series')
     ->controller(SeasonsController::class)
+    ->middleware(Autenticador::class)
     ->group(function () {
 
         Route::get('/{series}/seasons', 'index')->name('seasons.index');
@@ -42,6 +43,7 @@ Route::prefix('series')
 
 
 Route::controller(EpisodesController::class)
+->middleware(Autenticador::class)
     ->group(function () {
 
         Route::get('/seasons/{seasons}/episodes', 'index')->name('episodes.index');
