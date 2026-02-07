@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Autenticador;
 use App\Http\Requests\SeriesFormRequest;
+use App\Mail\SeriesCreated;
 use App\Models\Series;
 // use App\Repositories\EloquentSeriesRepository;
 use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SeriesController extends Controller
 {
@@ -79,6 +81,17 @@ class SeriesController extends Controller
         // Adicionei a lógica de criação de séries na camada de Repositories
 
         $serieCriada = $this->repository->add($request);
+
+        $email = new SeriesCreated(
+            $serieCriada->titulo,
+            $serieCriada->id,
+            $request->seasonsQty,
+            $request->episodesPerSeason
+        );
+
+        
+        Mail::to($request->user())->send($email);
+
 
         return redirect()
             ->route('series.index')
