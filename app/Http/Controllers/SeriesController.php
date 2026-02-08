@@ -7,18 +7,22 @@ use App\Http\Middleware\Autenticador;
 use App\Http\Requests\SeriesFormRequest;
 use App\Mail\SeriesCreated;
 use App\Models\Series;
+use App\Models\User;
 // use App\Repositories\EloquentSeriesRepository;
 use App\Repositories\SeriesRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+
+use function Symfony\Component\Clock\now;
 
 class SeriesController extends Controller
 {
 
     public function __construct(private SeriesRepository $repository)
-{
-    
-}
+    {
+
+    }
 
     public function index(Request $request)
     {
@@ -82,15 +86,22 @@ class SeriesController extends Controller
 
         $serieCriada = $this->repository->add($request);
 
-        $email = new SeriesCreated(
-            $serieCriada->titulo,
-            $serieCriada->id,
-            $request->seasonsQty,
-            $request->episodesPerSeason
-        );
+        $listUsers = User::all();
 
-        
-        Mail::to($request->user())->send($email);
+        foreach ($listUsers as $index => $user) {
+            $email = new SeriesCreated(
+                $serieCriada->titulo,
+                $serieCriada->id,
+                $request->seasonsQty,
+                $request->episodesPerSeason
+            );
+
+            // Mail::to($user->email)->queue($email);
+            $when = Carbon::now()->addSeconds($index * 30);
+
+            Mail::to($user->email)->later($when,$email);
+
+        }
 
 
         return redirect()
