@@ -35,7 +35,7 @@
             @forelse ($series as $serie)
                 <tr>
                     <td>{{ $serie->id }}</td>
-                    <td> <a href="{{ route('seasons.index', $serie->id) }}">{{ $serie->titulo }}</a> </td>
+                    <td> <img src="{{ asset('storage/' . $serie->cover ) }}" alt="" srcset="" style="max-width: 100px"> <a href="{{ route('seasons.index', $serie->id) }}">{{ $serie->titulo }}</a> </td>
 
                     @auth
                         <td>

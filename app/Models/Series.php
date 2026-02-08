@@ -11,7 +11,7 @@ class Series extends Model
 {
     use HasFactory;
     // protected $primaryKey = 'id';
-    protected $fillable = ['titulo'];
+    protected $fillable = ['titulo', 'cover'];
 
     public function seasons()
     {

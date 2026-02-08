@@ -7,7 +7,6 @@ use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\TesteEventoController;
 use App\Http\Controllers\UsersController;
 use App\Http\Middleware\Autenticador;
-use App\Mail\SeriesCreated;
 use Illuminate\Support\Facades\Route;
 
 
@@ -71,4 +70,4 @@ Route::controller(UsersController::class)
     });
 
 
-Route::get('/teste-evento', [TesteEventoController::class, 'testar']);
+

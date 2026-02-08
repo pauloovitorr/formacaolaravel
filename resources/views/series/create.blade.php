@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('series.store') }}" method="POST">
+                    <form action="{{ route('series.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
@@ -33,6 +33,12 @@
                             <label for="episodesPerSeason" class="form-label">Eps / Temporada:</label>
                             <input type="number" id="episodesPerSeason" name="episodesPerSeason" class="form-control"
                                 value="{{ old('episodesPerSeason') }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="cover" class="form-label">Capa</label>
+                            <input type="file" id="cover" name="cover" class="form-control" accept="image/*"
+                                value="{{ old('cover') }}">
                         </div>
 
                         <div class="d-grid">

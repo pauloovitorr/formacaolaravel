@@ -11,8 +11,7 @@ use App\Repositories\SeriesRepository;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
-
+use Illuminate\Support\Facades\Storage;
 
 class SeriesController extends Controller
 {
@@ -50,26 +49,28 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-   public function store(SeriesFormRequest $request)
+    public function store(SeriesFormRequest $request)
     {
-       
-        
+        $cover_path = $request->file('cover')->store('series_cover', 'public');
+        $request->coverPath = $cover_path;
+
+
         // Cria a série
         $serieCriada = $this->repository->add($request);
-        
-      
+
+
 
         // Cria o evento
         $eventSeries = new SeriesCreated(
             $serieCriada->titulo,
             $serieCriada->id,
-            $request->seasonsQty,      
+            $request->seasonsQty,
             $request->episodesPerSeason
         );
-  
+
         // Dispara o evento
         event($eventSeries);
-        
+
         return redirect()
             ->route('series.index')
             ->with('success', "Série {$serieCriada->titulo} cadastrada com sucesso");
@@ -82,19 +83,28 @@ class SeriesController extends Controller
     //     dd($request->route('serie'));
     // }
 
-    // 2° Pegar diretamente o ID da url
-    public function destroy($serie)
-    {
 
-        $nome_serie = Series::find($serie);
 
-        $serie = Series::destroy($serie);
-        if ($serie) {
-            return redirect()
-                ->route('series.index')
-                ->with('success', "Série {$nome_serie->titulo} excluída com sucesso");
-        }
+public function destroy($id)
+{
+    $serie = Series::findOrFail($id);
+
+
+
+    // Apagar imagem física
+    if ($serie->cover && Storage::disk('public')->exists($serie->cover)) {
+        Storage::disk('public')->delete($serie->cover);
     }
+
+    // Apagar registro
+    $serie->delete();
+
+    return redirect()
+        ->route('series.index')
+        ->with('success', "Série {$serie->titulo} excluída com sucesso");
+}
+
+
 
     public function edit($serie)
     {
@@ -110,6 +120,7 @@ class SeriesController extends Controller
 
         return view('series.edit')->with('serie', $serie);
     }
+
 
     public function update(SeriesFormRequest $request, $serie)
     {

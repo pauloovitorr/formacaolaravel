@@ -24,7 +24,10 @@ class EloquentSeriesRepository implements SeriesRepository{
         // 2° Forma de transação -> Já cuida do commit e rollback 
         return  DB::transaction(function () use ($request) {
             // mass assignment 2
-            $serie = Series::create($request->all());
+            $serie = Series::create([
+                'titulo' => $request->titulo,
+                'cover' => $request->coverPath
+            ]);
             // if ($serie) {
             //   return  response([
             //         'status' => 'success'

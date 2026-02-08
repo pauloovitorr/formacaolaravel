@@ -10,6 +10,10 @@
         <h1>Séries Cadastradas</h1>
     </div>
 
+    <div class="mb-3">
+        <img src="{{ asset('storage/' . $series->cover ) }}" style="max-width: 400px" alt="" srcset="">
+    </div>
+
   <table class="table table-striped table-bordered">
     <thead class="table-dark">
         <tr>
