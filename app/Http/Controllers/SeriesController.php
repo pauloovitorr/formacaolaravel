@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SeriesCreated;
 use App\Http\Controllers\Controller;
-use App\Http\Middleware\Autenticador;
-use App\Http\Requests\SeriesFormRequest;
-use App\Mail\SeriesCreated;
-use App\Models\Series;
-use App\Models\User;
-// use App\Repositories\EloquentSeriesRepository;
-use App\Repositories\SeriesRepository;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
-use function Symfony\Component\Clock\now;
+use App\Http\Requests\SeriesFormRequest;
+use App\Models\Series;
+use App\Repositories\SeriesRepository;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
+
 
 class SeriesController extends Controller
 {
@@ -52,84 +50,31 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function store(SeriesFormRequest $request)
+   public function store(SeriesFormRequest $request)
     {
-
-        // $tituloSerie = $request->input('titulo');
-        // $temporadaSerie = (int) $request->input('temporadas');
-
-        // Forma de fazer com SQL puro sem model
-        // $retorno = DB::insert('insert into series (titulo, temporadas) values (?, ?)', [$tituloSerie, $temporadaSerie]);
-
-        // Com model
-        // $serie = new Serie();
-        // $serie->titulo = $tituloSerie;
-        // $serie->temporadas = $temporadaSerie;
-        // $serie->save();
-
-        // mass assignment
-        // $serie = Serie::create([
-        //     'titulo' => $request->titulo,
-        //     'temporadas' => $request->temporadas
-        // ]);
-
-        // 1° Validação de dados
-        // $request->validate([
-        //     'titulo' => ['required', 'min:3', 'max:50'],
-        //     'temporadas' => ['required', 'integer']
-        // ]);
-
-        // 2° Validação de dados -> Criei a minha própria Request
-
-
-        // Adicionei a lógica de criação de séries na camada de Repositories
-
+       
+        
+        // Cria a série
         $serieCriada = $this->repository->add($request);
+        
+      
 
-        $listUsers = User::all();
-
-        foreach ($listUsers as $index => $user) {
-            $email = new SeriesCreated(
-                $serieCriada->titulo,
-                $serieCriada->id,
-                $request->seasonsQty,
-                $request->episodesPerSeason
-            );
-
-            // Mail::to($user->email)->queue($email);
-            $when = Carbon::now()->addSeconds($index * 30);
-
-            Mail::to($user->email)->later($when,$email);
-
-        }
-
-
+        // Cria o evento
+        $eventSeries = new SeriesCreated(
+            $serieCriada->titulo,
+            $serieCriada->id,
+            $request->seasonsQty,      
+            $request->episodesPerSeason
+        );
+  
+        // Dispara o evento
+        event($eventSeries);
+        
         return redirect()
             ->route('series.index')
             ->with('success', "Série {$serieCriada->titulo} cadastrada com sucesso");
-        ;
-
-        // } 
-
-        // else {
-        //     //   return   response([
-        //     //         'status' => 'error'
-        //     //     ],400 );
-
-
-        //     return redirect()
-        //         ->route('series.create')
-        //         ->withErrors(['erro' => 'Erro ao criar a série'])
-        //         ->withInput();
-
-
-        // }
-
-
-
-
-
     }
+
 
     // Duas formas de excluir um registro
     // 1° Pegar o valor pelo $request->route
@@ -182,9 +127,6 @@ class SeriesController extends Controller
                 ->route('series.index')
                 ->with('success', 'Série atualizada');
         }
-
-
-
 
     }
 

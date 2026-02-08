@@ -4,6 +4,7 @@ use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\SeriesController;
+use App\Http\Controllers\TesteEventoController;
 use App\Http\Controllers\UsersController;
 use App\Http\Middleware\Autenticador;
 use App\Mail\SeriesCreated;
@@ -69,14 +70,5 @@ Route::controller(UsersController::class)
         
     });
 
-Route::get('/email', function(){
 
-    return new SeriesCreated(
-        'A Guerra do Vietnã',
-        7,
-        2,
-        2
-    );
-
-
-});
+Route::get('/teste-evento', [TesteEventoController::class, 'testar']);
